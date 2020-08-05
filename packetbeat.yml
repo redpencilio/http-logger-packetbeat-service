@@ -11,9 +11,11 @@ packetbeat.protocols:
     - type: http
       ports: [80]
       send_all_headers: true
-      include_body_for: ["text/html", "text/plain", "application/xml", "application/javascript", "application/json", "application/x-ndjson", "multipart/form-data", "application/vnd.api+json"]
+      include_body_for: ["text/html", "text/html;charset=utf-8", "text/plain", "application/xml", "application/xhtml+xml", "application/javascript", "application/json", "application/ld+json", "application/x-ndjson", "multipart/form-data", "application/vnd.api+json", "*/*"]
       decode_body: true
       split_cookie: true
+      send_response: true
+      send_request: true
 
 output.logstash:
   hosts: ["${LOGSTASH_URL:?No Logstash URL provided.}"]
