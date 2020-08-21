@@ -7,7 +7,7 @@
 # which uses `dash` as their `sh`. So try to avoid bash-isms if
 # you modify this script!
 
-trap "exit 133" INT TERM # Exit on signal
+trap 'kill "$packetbeat"; wait "$packetbeat"; exit 133' INT TERM # Exit on signal
 
 /usr/local/bin/docker-entrypoint -environment container & # Taken from `docker inspect`-ing a regular Packetbeat container.
                                                           # Note the & to run in the background.
@@ -23,7 +23,7 @@ while true; do
     if ping -q -c 1 -w 1 logstash > /dev/null; then # Deadline of 1 second should be enough if logstash is on the same host.
         backoff=2
     else
-        if [ $backoff -ge 32 ]; then
+        if [ $backoff -ge 16 ]; then # Total wait ~ half a minute
             echo "!!Cannot connect to Logstash, exiting.!!"
             exit 25
         else
