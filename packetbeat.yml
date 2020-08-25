@@ -1,22 +1,24 @@
-name: "${COMPOSE_SERVICE:?No service}-${COMPOSE_CONTAINER_ID:?No container ID}"
+name: "${DOCKER_ID:?DOCKER_ID is not set}"
 
 fields:
-  compose_project: "${COMPOSE_PROJECT}"
+  docker_id: "${DOCKER_ID}"
+  docker_name: "${DOCKER_NAME}"
+  docker_image: "${DOCKER_IMAGE}"
   compose_service: "${COMPOSE_SERVICE}"
-  compose_container_number: "${COMPOSE_CONTAINER_ID}"
+  compose_project: "${COMPOSE_PROJECT}"
 
 packetbeat.interfaces.device: any
 
 packetbeat.protocols:
-    - type: http
-      ports: ${PACKETBEAT_LISTEN_PORTS:[80, 81, 88, 8080, 8890, 1111, 4200, 9229]} # Some common default ports
-      send_all_headers: true
-      include_body_for: ["text/html", "text/html;charset=utf-8", "text/plain", "application/xml", "application/xhtml+xml", "application/javascript", "application/json", "application/ld+json", "application/x-ndjson", "multipart/form-data", "application/vnd.api+json", "application/sparql-results+xml", "application/sparql-query"]
-      decode_body: true
-      split_cookie: true
-      send_response: true
-      send_request: true
-      max_message_size: ${PACKETBEAT_MAX_MESSAGE_SIZE:1048576} # Default: 1M
+  - type: http
+    ports: ${PACKETBEAT_LISTEN_PORTS:[80, 81, 88, 8080, 8890, 1111, 4200, 9229]} # Some common default ports
+    send_all_headers: true
+    include_body_for: ["text/html", "text/html;charset=utf-8", "text/plain", "application/xml", "application/xhtml+xml", "application/javascript", "application/json", "application/ld+json", "application/x-ndjson", "multipart/form-data", "application/vnd.api+json", "application/sparql-results+xml", "application/sparql-query"]
+    decode_body: true
+    split_cookie: true
+    send_response: true
+    send_request: true
+    max_message_size: ${PACKETBEAT_MAX_MESSAGE_SIZE:102400} # Default: 100K
 
 output.logstash:
   hosts: ["${LOGSTASH_URL:?No Logstash URL provided.}"]
