@@ -9,13 +9,14 @@ packetbeat.interfaces.device: any
 
 packetbeat.protocols:
     - type: http
-      ports: [80]
+      ports: ${PACKETBEAT_LISTEN_PORTS:[80, 81, 88, 8080, 8890, 1111, 4200, 9229]} # Some common default ports
       send_all_headers: true
-      include_body_for: ["text/html", "text/html;charset=utf-8", "text/plain", "application/xml", "application/xhtml+xml", "application/javascript", "application/json", "application/ld+json", "application/x-ndjson", "multipart/form-data", "application/vnd.api+json", "*/*"]
+      include_body_for: ["text/html", "text/html;charset=utf-8", "text/plain", "application/xml", "application/xhtml+xml", "application/javascript", "application/json", "application/ld+json", "application/x-ndjson", "multipart/form-data", "application/vnd.api+json", "application/sparql-results+xml", "application/sparql-query"]
       decode_body: true
       split_cookie: true
       send_response: true
       send_request: true
+      max_message_size: ${PACKETBEAT_MAX_MESSAGE_SIZE:1048576} # Default: 1M
 
 output.logstash:
   hosts: ["${LOGSTASH_URL:?No Logstash URL provided.}"]
