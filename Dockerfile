@@ -6,6 +6,7 @@ COPY start.sh /
 
 COPY packetbeat.yml /usr/share/packetbeat/packetbeat.yml
 RUN chown root:root /usr/share/packetbeat/packetbeat.yml
+RUN chmod go-w /usr/share/packetbeat/packetbeat.yml
 
 ENTRYPOINT ["/start.sh"]
 CMD []
